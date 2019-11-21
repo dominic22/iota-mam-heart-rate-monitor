@@ -40,7 +40,7 @@ function App() {
           const heartRate = Math.ceil(Math.random(100) * 100) + 100;
           const root = await publish({
             heartRate: heartRate,
-            timestamp: (new Date()).toLocaleString()
+            timestamp: new Date().toISOString(),
           });
           setCurrentRoot(root);
           setHeartRate(heartRate);
