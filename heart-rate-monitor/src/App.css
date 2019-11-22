@@ -4,10 +4,18 @@
 body {
   overflow: hidden;
 }
+
+.headline-container {
+  display: flex;
+  height: 240px;
+  margin-bottom: 60px;
+}
 .app-logo {
   width: 50%;
-  margin-bottom: 60px;
-  max-width: 400px;
+  max-width: 300px;
+}
+.headline-container h1 {
+  margin: auto;
 }
 
 div {

@@ -1,5 +1,6 @@
 import React from 'react';
-import logo from './logo.svg';
+import logo from './logo.png';
+import ChartViewComponent from './chart/Chart'
 import './App.css';
 import { BrowserRouter as Router, Route, Switch, useParams } from 'react-router-dom';
 import { trytesToAscii } from '@iota/converter';
@@ -13,7 +14,7 @@ let mamState = Mam.init(provider);
 export default function App() {
   return (
     <Router>
-      <div>
+        <header className="app-header">
         <Switch>
           <Route exact path="/">
             <header className="app-header">
@@ -30,7 +31,7 @@ export default function App() {
             <Dashboard/>
           </Route>
         </Switch>
-      </div>
+      </header>
     </Router>
   );
 }
@@ -53,12 +54,16 @@ function Home() {
   pullTangleData(root);  
 
   return (
-    <header className="app-header">
-      <img src={logo} className="app-logo" alt="logo"/>
+    <>
+      <div className="headline-container">
+        <img src={logo} className="app-logo" alt="logo"/>
+        <h1>Heart Rate Monitor</h1>
+      </div>
+      <ChartViewComponent/>
       <p>
         Current root: {root}
       </p>
-    </header>
+    </>
   );
 }
 
