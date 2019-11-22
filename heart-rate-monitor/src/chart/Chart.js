@@ -27,11 +27,20 @@ export function initializeChart(data, labels) {
                 display: false,
             },
             scales: {
+                xAxes:[{
+                    ticks:{
+                        fontColor:'#ffffff',
+                    },
+                }],
                 yAxes: [{
                     ticks: {
+                        fontColor: '#ffffff',
                         beginAtZero: true
                     }
                 }]
+            },
+            tooltips: {
+                intersect: false
             }
         }
     });
