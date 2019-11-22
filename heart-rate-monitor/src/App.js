@@ -5,7 +5,8 @@ import './App.css';
 import { BrowserRouter as Router, Route, Switch, useParams } from 'react-router-dom';
 import { trytesToAscii } from '@iota/converter';
 import Mam from '@iota/mam';
-
+import moment from 'moment';
+import 'moment/locale/de';
 const mode = 'restricted';
 const secretKey = 'SECRETBIG'; // secret always upper case!
 const provider = 'https://nodes.devnet.iota.org';
@@ -24,26 +25,29 @@ export default function App() {
           <Route exact path="/:root">
             <Home/>
           </Route>
-          <Route path="/about">
-            <About/>
-          </Route>
-          <Route path="/dashboard">
-            <Dashboard/>
-          </Route>
         </Switch>
       </header>
     </Router>
   );
 }
 
-
+let prevDate = null;
 // You can think of these components as "pages"
 // in your app.
 const logData = encodedData => {
   const data = JSON.parse(trytesToAscii(encodedData));
   console.log('Fetched and parsed', data, '\n')
   console.log('data ', data.heartRate)
-  addData(new Date(data.timestamp).toDateString(), data.heartRate);
+  const date = new Date(data.timestamp);
+
+  moment.locale('de');
+  let dateString = moment(data.timestamp).format('LTS');
+
+  if(!prevDate || date.getDate() !== prevDate.getDate() || date.getMonth() !== prevDate.getMonth() || date.getFullYear() !== prevDate.getFullYear()) {
+      dateString = moment(data.timestamp).format('MMMM Do YYYY, hh:mm:ss');
+      prevDate = date;
+  }
+  addData(dateString, data.heartRate);
 }
 
 async function pullTangleData(root) {
@@ -53,7 +57,7 @@ async function pullTangleData(root) {
   // console.log('Next Root: ', fetched.messages.map(m => trytesToAscii(m)))
   setTimeout(() => {
     pullTangleData(nextRoot);
-  }, 200);
+  }, 500);
 }
 
 function Home() {
@@ -68,19 +72,5 @@ function Home() {
       </div>
       <ChartViewComponent data={[]} labels={[]}/>
     </>
-  );
-}
-
-function About() {
-  return (<div>
-    <h2>About</h2>
-  </div>)
-}
-
-function Dashboard() {
-  return (
-    <div>
-      <h2>Dashboard</h2>
-    </div>
   );
 }
