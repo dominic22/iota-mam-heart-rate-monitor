@@ -15,6 +15,11 @@ export default function App() {
     <Router>
       <div>
         <Switch>
+          <Route exact path="/">
+            <header className="app-header">
+            <p>You have not specified a root. Please call the URL as following: localhost:3001/ROOT</p>
+            </header>
+          </Route>
           <Route exact path="/:root">
             <Home/>
           </Route>
@@ -34,13 +39,22 @@ export default function App() {
 // in your app.
 const logData = data => console.log('Fetched and parsed', JSON.parse(trytesToAscii(data)), '\n')
 
+async function pullTangleData(root) {
+  const fetched = await Mam.fetch(root, mode, secretKey, logData);
+  const nextRoot = fetched.nextRoot;
+  console.log('Next Root: ', nextRoot)
+  setTimeout(() => {
+    pullTangleData(nextRoot);
+  }, 1000);
+}
+
 function Home() {
   const { root } = useParams();
-  Mam.fetch(root, mode, secretKey, logData);
+  pullTangleData(root);  
 
   return (
-    <header className="App-header">
-      <img src={logo} className="App-logo" alt="logo"/>
+    <header className="app-header">
+      <img src={logo} className="app-logo" alt="logo"/>
       <p>
         Current root: {root}
       </p>
