@@ -2,17 +2,21 @@ import React, { useEffect } from 'react';
 import './Chart.css'
 import Chart from 'chart.js';
 
-export function initializeChart() {
+var chart;
+
+export function initializeChart(data, labels) {
     var ctx = document.getElementById('heart-rate-chart').getContext('2d');
-    var myChart = new Chart(ctx, {
+    chart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            labels,
             datasets: [{
                 label: 'Heart Rate',
-                data: [12, 19, 3, 5, 2, 3],
+                data,
+                borderColor: [
+                    'rgba(223, 71, 50, 1)'
+                ],
                 backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
                 ],
                 borderWidth: 1
             }]
@@ -33,9 +37,21 @@ export function initializeChart() {
     });
 }
 
-export default function ChartViewComponent() {
+export function addData(label, data) {
+    console.log('ADD DATA ', label, data)
+    if(!chart) {
+        return;
+    }
+    chart.data.labels.push(label);
+    chart.data.datasets.forEach((dataset) => {
+        dataset.data.push(data);
+    });
+    chart.update();
+}
+
+export default function ChartViewComponent(props) {
     useEffect(() => {
-       initializeChart();
+       initializeChart(props.data, props.labels);
       });
     return (
         <div className="chart-container">

@@ -1,6 +1,6 @@
 import React from 'react';
 import logo from './logo.png';
-import ChartViewComponent from './chart/Chart'
+import ChartViewComponent, {  addData} from './chart/Chart'
 import './App.css';
 import { BrowserRouter as Router, Route, Switch, useParams } from 'react-router-dom';
 import { trytesToAscii } from '@iota/converter';
@@ -9,7 +9,7 @@ import Mam from '@iota/mam';
 const mode = 'restricted';
 const secretKey = 'SECRETBIG'; // secret always upper case!
 const provider = 'https://nodes.devnet.iota.org';
-let mamState = Mam.init(provider);
+Mam.init(provider);
 
 export default function App() {
   return (
@@ -36,22 +36,29 @@ export default function App() {
   );
 }
 
+
 // You can think of these components as "pages"
 // in your app.
-const logData = data => console.log('Fetched and parsed', JSON.parse(trytesToAscii(data)), '\n')
+const logData = encodedData => {
+  const data = JSON.parse(trytesToAscii(encodedData));
+  console.log('Fetched and parsed', data, '\n')
+  console.log('data ', data.heartRate)
+  addData(new Date(data.timestamp).toDateString(), data.heartRate);
+}
 
 async function pullTangleData(root) {
   const fetched = await Mam.fetch(root, mode, secretKey, logData);
   const nextRoot = fetched.nextRoot;
   console.log('Next Root: ', nextRoot)
+  // console.log('Next Root: ', fetched.messages.map(m => trytesToAscii(m)))
   setTimeout(() => {
     pullTangleData(nextRoot);
-  }, 1000);
+  }, 200);
 }
 
 function Home() {
   const { root } = useParams();
-  pullTangleData(root);  
+  pullTangleData(root);
 
   return (
     <>
@@ -59,7 +66,7 @@ function Home() {
         <img src={logo} className="app-logo" alt="logo"/>
         <h1>Heart Rate Monitor</h1>
       </div>
-      <ChartViewComponent/>
+      <ChartViewComponent data={[]} labels={[]}/>
     </>
   );
 }
