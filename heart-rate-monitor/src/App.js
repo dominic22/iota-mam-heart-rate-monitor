@@ -60,9 +60,6 @@ function Home() {
         <h1>Heart Rate Monitor</h1>
       </div>
       <ChartViewComponent/>
-      <p>
-        Current root: {root}
-      </p>
     </>
   );
 }
