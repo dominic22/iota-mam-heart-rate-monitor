@@ -62,3 +62,8 @@ typings/
 
 # intellij settings
 .idea
+
+# android
+app/build/**/*
+
+.dex
