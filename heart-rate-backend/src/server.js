@@ -8,7 +8,6 @@ const router = express.Router();
 
 router.get('/', (req, res) => {
   const { heartRate } = req.query;
-  console.log('ree ', req);
   if (heartRate) {
     // TODO send heart rate to tangle!
     console.log('send heart rate to tangle!', heartRate);
