@@ -1,0 +1,15 @@
+{
+  "name": "heart-rate-backend",
+  "version": "1.0.0",
+  "description": "Heart rate backend which publishes received heart rates to the tangle.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js"
+  },
+  "author": "dominic22",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
