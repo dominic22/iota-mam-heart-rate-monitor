@@ -1,7 +1,52 @@
+.chart-wrapper {
+  width: 100%;
+  position: relative;
+  height: 500px;
+}
+
 .chart-container {
-    height: 500px;
-    width: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 100px;
+  right: 100px;
+}
+
+@media (max-width: 1200px) {
+  .chart-container {
+    left: 30px;
+    right: 30px;
+  }
 }
 
 #heart-rate-chart {
+}
+
+#chartjs-tooltip {
+  opacity: 1;
+  position: absolute;
+  background: rgba(0, 0, 0, .7);
+  color: white;
+  font-size: 26px;
+  border-radius: 3px;
+  -webkit-transition: all .1s ease;
+  transition: all .1s ease;
+  pointer-events: none;
+  -webkit-transform: translate(-50%, 0);
+  transform: translate(-50%, 0);
+  margin-top: 10px;
+  width: 150px;
+}
+
+.chartjs-tooltip-key {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 10px;
+  font-size: 16px;
+}
+
+#chartjs-tooltip th,
+#chartjs-tooltip td {
+  font-size: 16px;
 }
