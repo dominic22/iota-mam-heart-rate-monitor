@@ -113,9 +113,7 @@ function Home() {
           }}>SYNC CHART
           </div>
         </div>
-
       </div>
-
 
       <ChartViewComponent data={[]} labels={[]}/>
     </>
@@ -127,7 +125,7 @@ async function pullTangleDataStatic(root) {
   const nextRoot = fetched.nextRoot;
   console.log('Next Root: ', nextRoot);
   setTimeout(() => {
-    pullTangleData(nextRoot);
+    pullTangleDataStatic(nextRoot);
   }, 500);
 }
 
