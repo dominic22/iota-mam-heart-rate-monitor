@@ -7,7 +7,7 @@ import Mam from '@iota/mam';
 const mode = 'restricted';
 const secretKey = 'SECRETBIG'; // secret always upper case!
 const provider = 'https://nodes.devnet.iota.org';
-const mamExplorerLink = `https://mam-explorer.firebaseapp.com/?provider=${encodeURIComponent(provider)}&mode=${mode}&key=${secretKey.padEnd(81, '9')}&root=`;
+const explorerLink = `https://heart-rate-monitor.netlify.com/`;
 
 let mamState = Mam.init(provider);
 const baseRoot = Mam.getRoot(mamState);
@@ -37,7 +37,7 @@ function App() {
         <img src={logo} className="app-logo" alt="logo"/>
         <div>Publish your heart rate to the tangle!</div>
         <div className="button" onClick={async () => {
-          const heartRate = Math.ceil(Math.random(100) * 100) + 80;
+          const heartRate = Math.ceil(Math.random(100) * 100);
           const root = await publish({
             heartRate: heartRate,
             timestamp: new Date().toISOString(),
@@ -48,7 +48,7 @@ function App() {
         </div>
         <div className="link-wrapper">Base root: <a
           className="app-link"
-          href={mamExplorerLink + baseRoot}
+          href={explorerLink + baseRoot}
           target="_blank"
           rel="noopener noreferrer"
         > {baseRoot}</a></div>
@@ -56,7 +56,7 @@ function App() {
         <div>Current heart rate: {heartRate}</div>
         <div className="link-wrapper">Current root: <a
           className="app-link"
-          href={mamExplorerLink + currentRoot}
+          href={explorerLink + currentRoot}
           target="_blank"
           rel="noopener noreferrer"
         ><span> {currentRoot}</span></a></div>

@@ -2,7 +2,7 @@ import React from 'react';
 import logo from './logo.png';
 import ChartViewComponent, { addData } from './chart/Chart'
 import './App.css';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, useParams } from 'react-router-dom';
 import { trytesToAscii } from '@iota/converter';
 import Mam from '@iota/mam';
 import moment from 'moment';
@@ -22,7 +22,7 @@ export default function App() {
             <Home/>
           </Route>
           <Route exact path="/:root">
-            <Home/>
+            <StaticRoot/>
           </Route>
         </Switch>
       </header>
@@ -117,6 +117,31 @@ function Home() {
       </div>
 
 
+      <ChartViewComponent data={[]} labels={[]}/>
+    </>
+  );
+}
+
+async function pullTangleDataStatic(root) {
+  const fetched = await Mam.fetch(root, mode, secretKey, logData);
+  const nextRoot = fetched.nextRoot;
+  console.log('Next Root: ', nextRoot);
+  setTimeout(() => {
+    pullTangleData(nextRoot);
+  }, 500);
+}
+
+
+function StaticRoot() {
+  const { root } = useParams();
+  pullTangleDataStatic(root);
+
+  return (
+    <>
+      <div className="headline-container">
+        <img src={logo} className="app-logo" alt="logo"/>
+        <h1>Heart Rate Monitor</h1>
+      </div>
       <ChartViewComponent data={[]} labels={[]}/>
     </>
   );
