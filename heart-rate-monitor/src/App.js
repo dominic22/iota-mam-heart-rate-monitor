@@ -32,7 +32,7 @@ export default function App() {
   );
 }
 
-let prevDate = null;
+let nextRoot = null;
 // You can think of these components as "pages"
 // in your app.
 const logData = encodedData => {
@@ -54,8 +54,8 @@ const logData = encodedData => {
 
 async function pullTangleData(root) {
   const fetched = await Mam.fetch(root, mode, secretKey, logData);
-  const nextRoot = fetched.nextRoot;
-  console.log('Next Root: ', nextRoot)
+  nextRoot = fetched.nextRoot ? fetched.nextRoot : nextRoot;
+  console.log('Next Root: ', nextRoot);
   // console.log('Next Root: ', fetched.messages.map(m => trytesToAscii(m)))
   setTimeout(() => {
     pullTangleData(nextRoot);
