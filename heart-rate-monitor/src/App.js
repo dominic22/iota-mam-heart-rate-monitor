@@ -43,7 +43,7 @@ const logData = encodedData => {
   let dateString = moment(data.timestamp).format('LTS');
 
   const date = moment(data.timestamp).format('MM.DD.YYYY');
-  if (data.heartRate != null && data.heartRate !== -1) {
+  if (data.heartRate != null && data.heartRate < 0) {
     addData(dateString, data.heartRate, date);
   }
 };
