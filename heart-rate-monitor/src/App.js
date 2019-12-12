@@ -107,7 +107,9 @@ function Home() {
         <div className="headline-wrapper">
           <h1>Heart Rate Monitor</h1>
           <div className="button" onClick={async () => {
-            syncData()
+            const root = await syncData();
+            console.log('synced root: ', root);
+            await pullTangleData(root);
           }}>SYNC CHART
           </div>
         </div>

@@ -86,11 +86,16 @@ export function initializeChart(data, labels) {
           'rgba(223, 71, 50, 1)'
         ],
         backgroundColor: ['rgba(0, 0, 0, 0.2)'],
-        borderWidth: 1
+        borderWidth: 1,
+        pointHoverRadius: 6,
+        pointHoverBorderColor: 'rgba(223, 71, 50, 1)',
       }]
     },
     options: {
       responsive: true,
+      hover: {
+        intersect: false,
+      },
       title: {
         display: true,
         text: '',
