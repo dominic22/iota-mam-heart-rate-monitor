@@ -49,31 +49,17 @@ const logData = encodedData => {
   //   prevDate = date;
   // }
   const date = moment(data.timestamp).format('MM.DD.YYYY');
-
-  addData(dateString, data.heartRate, date);
+  if (data.heartRate != null && data.heartRate !== -1) {
+    addData(dateString, data.heartRate, date);
+  }
 };
-
-let counter = 0;
 
 async function pullTangleData(root) {
   const fetched = await Mam.fetch(root, mode, secretKey, logData);
   nextRoot = fetched.nextRoot ? fetched.nextRoot : nextRoot;
   console.log('Next Root: ', nextRoot);
-  console.log('Next Root: ', fetched.messages);
-  if (fetched.messages && fetched.messages.length > 0) {
-    const lastMessage = fetched.messages[fetched.messages.length - 1];
-    console.log('LAST MESSAGE ', lastMessage);
-    const data = JSON.parse(trytesToAscii(lastMessage));
-    console.log('LAST MESSAGE DECODED', data);
-  }
-
-  if (counter === 100) {
-    counter = 0;
-    Mam.init(provider);
-  }
 
   setTimeout(() => {
-    counter++;
     pullTangleData(nextRoot);
   }, 2000);
 }
