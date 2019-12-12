@@ -51,7 +51,7 @@ async function pullTangleData(root) {
   const nextRoot = fetched.nextRoot;
   console.log('Next Root: ', nextRoot);
   if (fetched.nextRoot == null) {
-    const root = syncData();
+    const root = await syncData();
     console.log('synced root: ', root);
     await pullTangleData(root);
   } else {
