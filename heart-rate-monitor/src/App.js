@@ -47,10 +47,14 @@ const logData = encodedData => {
 };
 
 async function pullTangleData(root) {
-  const fetched = await Mam.fetch(root, mode, secretKey, logData);
-  const nextRoot = fetched.nextRoot;
+  let fetched = null;
+  if (root) {
+    fetched = await Mam.fetch(root, mode, secretKey, logData);
+  }
+  const nextRoot = fetched && fetched.nextRoot;
+
   console.log('Next Root: ', nextRoot);
-  if (fetched.nextRoot == null) {
+  if (nextRoot == null) {
     const root = await syncData();
     console.log('synced root: ', root);
     await pullTangleData(root);
