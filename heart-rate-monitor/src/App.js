@@ -59,7 +59,7 @@ async function pullTangleData(root) {
   // console.log('Next Root: ', fetched.messages.map(m => trytesToAscii(m)))
   setTimeout(() => {
     pullTangleData(nextRoot);
-  }, 500);
+  }, 2000);
 }
 
 function Home() {
