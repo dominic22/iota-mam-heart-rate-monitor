@@ -16,6 +16,7 @@ router.get('/', async (req, res) => {
       heartRate,
       timestamp: new Date().toISOString(),
     });
+    console.log('new root: ', root);
     res.writeHead(200, { 'Content-Type': 'text/html' });
     res.write('<h1>Sent heart rate to tangle ' + heartRate + ' .</h1><p>Current root: ' + root + ' </p>');
     res.end();

@@ -5,7 +5,7 @@ const mode = 'restricted';
 const secretKey = 'SECRETBIG'; // secret always upper case!
 const provider = 'https://nodes.devnet.iota.org';
 let mamState = Mam.init(provider);
-console.log(Mam.getRoot(mamState));
+console.log('## Base root: ', Mam.getRoot(mamState));
 mamState = Mam.changeMode(mamState, mode, secretKey);
 
 function getRoot() {
