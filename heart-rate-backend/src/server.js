@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const iotaPublisher = require('./iota-publisher');
 
 const router = express.Router();
+let currentRoot = iotaPublisher.getRoot();
 
 router.get('/', async (req, res) => {
   let { heartRate } = req.query;
@@ -17,19 +18,23 @@ router.get('/', async (req, res) => {
       timestamp: new Date().toISOString(),
     });
     console.log('new root: ', root);
+    currentRoot = root;
+
     res.writeHead(200, { 'Content-Type': 'text/html' });
-    res.write('<h1>Sent heart rate to tangle ' + heartRate + ' .</h1><p>Current root: ' + root + ' </p>');
+    res.write('<h1>Sent heart rate to tangle ' + heartRate + ' .</h1><p>Current root is: ' + root + ' </p>');
     res.end();
   } else {
     console.log('no heart rate parameter provided');
     res.writeHead(200, { 'Content-Type': 'text/html' });
     res.write('<p>No heart rate received. Please add query parameter heartRate to your request.</p>' +
-      '<p>You might have to call the url as domain.com/.netlify/functions/server?heartRate=53</p>');
+      '<p>You might have to call the url as domain.com/.netlify/functions/server?heartRate=53</p>' +
+      '<p><b>Current root:</b> ' + currentRoot + ' </p>');
     res.end();
   }
 });
 
 router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
+router.get('/currentroot', (req, res) => res.json({ currentRoot }));
 router.post('/', (req, res) => res.json({ postBody: req.body }));
 
 app.use(bodyParser.json());

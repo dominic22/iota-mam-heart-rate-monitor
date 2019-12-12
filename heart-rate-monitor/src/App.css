@@ -14,7 +14,7 @@ body {
   width: 50%;
   max-width: 300px;
 }
-.headline-container h1 {
+.headline-container .headline-wrapper {
   margin: auto;
 }
 
@@ -29,17 +29,18 @@ div {
   -ms-user-select: none;      /* IE 10+ */
   user-select: none;          /* Likely future */
   cursor: pointer;
-  margin-top: 30px;
-  margin-bottom: 50px;
+  /*margin-top: 30px;*/
+  /*margin-bottom: 50px;*/
   padding:20px;
   color: white;
   font-weight: bold;
-  background-color: #09d3ac;
+  background-color: #20252C;
   font-size:16px;
+  width: 101px;
 }
 
 .button:active {
-  background-color: #08b2ac;
+  background-color: #191C21;
 }
 
 .app-header {

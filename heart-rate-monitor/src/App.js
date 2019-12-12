@@ -33,6 +33,7 @@ export default function App() {
 }
 
 let nextRoot = null;
+
 // You can think of these components as "pages"
 // in your app.
 const logData = encodedData => {
@@ -52,12 +53,27 @@ const logData = encodedData => {
   addData(dateString, data.heartRate, date);
 };
 
+let counter = 0;
+
 async function pullTangleData(root) {
   const fetched = await Mam.fetch(root, mode, secretKey, logData);
   nextRoot = fetched.nextRoot ? fetched.nextRoot : nextRoot;
   console.log('Next Root: ', nextRoot);
-  // console.log('Next Root: ', fetched.messages.map(m => trytesToAscii(m)))
+  console.log('Next Root: ', fetched.messages);
+  if (fetched.messages && fetched.messages.length > 0) {
+    const lastMessage = fetched.messages[fetched.messages.length - 1];
+    console.log('LAST MESSAGE ', lastMessage);
+    const data = JSON.parse(trytesToAscii(lastMessage));
+    console.log('LAST MESSAGE DECODED', data);
+  }
+
+  if (counter === 100) {
+    counter = 0;
+    Mam.init(provider);
+  }
+
   setTimeout(() => {
+    counter++;
     pullTangleData(nextRoot);
   }, 2000);
 }
@@ -70,8 +86,27 @@ function Home() {
     <>
       <div className="headline-container">
         <img src={logo} className="app-logo" alt="logo"/>
-        <h1>Heart Rate Monitor</h1>
+        <div className="headline-wrapper">
+          <h1>Heart Rate Monitor</h1>
+          <div className="button" onClick={async () => {
+            console.log('SYNC')
+            const urlPrefix = process.env.NODE_ENV === 'production' ? 'https://heart-rate-backend.netlify.com' : '';
+
+            let responsePromise = fetch(urlPrefix + '/.netlify/functions/server/currentroot');
+            const response = await responsePromise
+            if (response.status === 200) {
+              const json = await response.json();
+              nextRoot = json.currentRoot;
+            } else {
+              console.log('fetched failed');
+            }
+          }}>SYNC CHART
+          </div>
+        </div>
+
       </div>
+
+
       <ChartViewComponent data={[]} labels={[]}/>
     </>
   );
