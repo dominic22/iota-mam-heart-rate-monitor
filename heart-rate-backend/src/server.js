@@ -35,7 +35,6 @@ router.get('/', async (req, res) => {
 
 router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
 router.get('/currentroot', (req, res) => {
-  res.writeHead(200, { 'Access-Control-Allow-Origin': 'https://heart-rate-monitor.netlify.com' });
   res.json({ currentRoot })
 });
 router.post('/', (req, res) => res.json({ postBody: req.body }));
