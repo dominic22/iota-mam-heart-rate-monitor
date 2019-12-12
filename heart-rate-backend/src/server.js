@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const iotaPublisher = require('./iota-publisher');
 
 const router = express.Router();
-let currentRoot = iotaPublisher.getRoot();
+let currentRoot;
 
 router.get('/', async (req, res) => {
   let { heartRate } = req.query;
