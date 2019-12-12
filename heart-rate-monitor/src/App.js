@@ -2,7 +2,7 @@ import React from 'react';
 import logo from './logo.png';
 import ChartViewComponent, { addData } from './chart/Chart'
 import './App.css';
-import { BrowserRouter as Router, Route, Switch, useParams } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { trytesToAscii } from '@iota/converter';
 import Mam from '@iota/mam';
 import moment from 'moment';
@@ -19,9 +19,7 @@ export default function App() {
       <header className="app-header">
         <Switch>
           <Route exact path="/">
-            <header className="app-header">
-              <p>You have not specified a root. Please call the URL as following: localhost:3001/ROOT</p>
-            </header>
+            <Home/>
           </Route>
           <Route exact path="/:root">
             <Home/>
@@ -44,10 +42,6 @@ const logData = encodedData => {
   moment.locale('de');
   let dateString = moment(data.timestamp).format('LTS');
 
-  // if (!prevDate || date.getDate() !== prevDate.getDate() || date.getMonth() !== prevDate.getMonth() || date.getFullYear() !== prevDate.getFullYear()) {
-  //   dateString = moment(data.timestamp).format('MM.DD.YYYY');
-  //   prevDate = date;
-  // }
   const date = moment(data.timestamp).format('MM.DD.YYYY');
   if (data.heartRate != null && data.heartRate !== -1) {
     addData(dateString, data.heartRate, date);
@@ -64,9 +58,40 @@ async function pullTangleData(root) {
   }, 2000);
 }
 
+async function initView() {
+  const syncedRoot = await syncData();
+  if (syncedRoot) {
+    pullTangleData(syncedRoot);
+    return true;
+  } else {
+    console.error('Didn\'t find any rout');
+    return false;
+  }
+}
+
+async function syncData() {
+  console.log('sync data');
+  const urlPrefix = process.env.NODE_ENV === 'production' ? 'https://heart-rate-backend.netlify.com' : '';
+
+  let responsePromise = fetch(urlPrefix + '/.netlify/functions/server/currentroot');
+  const response = await responsePromise;
+  if (response.status === 200) {
+    const json = await response.json();
+    console.log('current root', json.currentRoot);
+    return json.currentRoot;
+  } else {
+    console.log('fetched failed');
+    return null;
+  }
+}
+
 function Home() {
-  const { root } = useParams();
-  pullTangleData(root);
+  const initialized = initView();
+  if (!initialized) {
+    return (<header className="app-header">
+      <p>Couldn't fetch any route is the backend running?</p>
+    </header>)
+  }
 
   return (
     <>
@@ -75,17 +100,7 @@ function Home() {
         <div className="headline-wrapper">
           <h1>Heart Rate Monitor</h1>
           <div className="button" onClick={async () => {
-            console.log('SYNC')
-            const urlPrefix = process.env.NODE_ENV === 'production' ? 'https://heart-rate-backend.netlify.com' : '';
-
-            let responsePromise = fetch(urlPrefix + '/.netlify/functions/server/currentroot');
-            const response = await responsePromise
-            if (response.status === 200) {
-              const json = await response.json();
-              nextRoot = json.currentRoot;
-            } else {
-              console.log('fetched failed');
-            }
+            syncData()
           }}>SYNC CHART
           </div>
         </div>
