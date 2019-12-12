@@ -3,16 +3,20 @@ const path = require('path');
 const serverless = require('serverless-http');
 const app = express();
 const bodyParser = require('body-parser');
+const iotaPublisher = require('./iota-publisher');
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   const { heartRate } = req.query;
   if (heartRate) {
-    // TODO send heart rate to tangle!
     console.log('send heart rate to tangle!', heartRate);
+    const root = await iotaPublisher.publish({
+      heartRate,
+      timestamp: new Date().toISOString(),
+    });
     res.writeHead(200, { 'Content-Type': 'text/html' });
-    res.write('<h1>Sent heart rate to tangle ' + heartRate + ' .</h1>');
+    res.write('<h1>Sent heart rate to tangle ' + heartRate + ' .</h1><p>Current root: ' + root + ' </p>');
     res.end();
   } else {
     console.log('no heart rate parameter provided');
