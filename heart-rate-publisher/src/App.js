@@ -37,7 +37,14 @@ function App() {
         <img src={logo} className="app-logo" alt="logo"/>
         <div>Publish your heart rate to the tangle!</div>
         <div className="button" onClick={async () => {
-          const heartRate = Math.ceil(Math.random(100) * 100);
+          let heartRate = Math.ceil(Math.random(100) * 100);
+
+          if (heartRate < 20) {
+            heartRate += 50;
+          } else if (heartRate < 50) {
+            heartRate += 30;
+          }
+
           const root = await publish({
             heartRate: heartRate,
             timestamp: new Date().toISOString(),
