@@ -8,8 +8,9 @@ const iotaPublisher = require('./iota-publisher');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-  const { heartRate } = req.query;
-  if (heartRate) {
+  let { heartRate } = req.query;
+  heartRate = Number(heartRate);
+  if (heartRate && !isNaN(heartRate)) {
     console.log('send heart rate to tangle!', heartRate);
     const root = await iotaPublisher.publish({
       heartRate,
