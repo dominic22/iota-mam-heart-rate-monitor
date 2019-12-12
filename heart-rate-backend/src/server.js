@@ -25,7 +25,7 @@ router.get('/', async (req, res) => {
     res.end();
   } else {
     console.log('no heart rate parameter provided');
-    res.writeHead(200, { 'Content-Type': 'text/html' });
+    res.writeHead(200, { 'Content-Type': 'text/html', 'Access-Control-Allow-Origin': '*' });
     res.write('<p>No heart rate received. Please add query parameter heartRate to your request.</p>' +
       '<p>You might have to call the url as domain.com/.netlify/functions/server?heartRate=53</p>' +
       '<p><b>Current root:</b> ' + currentRoot + ' </p>');
@@ -35,7 +35,11 @@ router.get('/', async (req, res) => {
 
 router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
 router.get('/currentroot', (req, res) => {
-  res.json({ currentRoot })
+
+  res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+  res.write(JSON.stringify({ currentRoot }));
+  res.end();
+
 });
 router.post('/', (req, res) => res.json({ postBody: req.body }));
 
