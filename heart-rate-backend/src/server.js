@@ -9,8 +9,9 @@ const router = express.Router();
 let currentRoot;
 
 router.get('/', async (req, res) => {
-  let { heartRate } = req.query;
+  let { heartRate, currentRootParam } = req.query;
   heartRate = Number(heartRate);
+
   if (heartRate && !isNaN(heartRate)) {
     console.log('send heart rate to tangle!', heartRate);
     const root = await iotaPublisher.publish({
@@ -22,6 +23,14 @@ router.get('/', async (req, res) => {
 
     res.writeHead(200, { 'Content-Type': 'text/html' });
     res.write('<h1>Sent heart rate to tangle ' + heartRate + ' .</h1><p>Current root is: ' + root + ' </p>');
+    res.end();
+  } else if (currentRootParam) {
+    res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    const root = await iotaPublisher.publish({
+      heartRate: -1,
+      timestamp: new Date().toISOString(),
+    });
+    res.write(JSON.stringify({ currentRoot: root }));
     res.end();
   } else {
     console.log('no heart rate parameter provided');
@@ -42,8 +51,8 @@ router.get('/currentroot', async (req, res) => {
   });
   res.write(JSON.stringify({ currentRoot: root }));
   res.end();
-
 });
+
 router.post('/', (req, res) => res.json({ postBody: req.body }));
 
 app.use(bodyParser.json());

@@ -30,8 +30,6 @@ export default function App() {
   );
 }
 
-let nextRoot = null;
-
 // You can think of these components as "pages"
 // in your app.
 const logData = encodedData => {
@@ -50,18 +48,23 @@ const logData = encodedData => {
 
 async function pullTangleData(root) {
   const fetched = await Mam.fetch(root, mode, secretKey, logData);
-  nextRoot = fetched.nextRoot ? fetched.nextRoot : nextRoot;
+  const nextRoot = fetched.nextRoot;
   console.log('Next Root: ', nextRoot);
-
-  setTimeout(() => {
-    pullTangleData(nextRoot);
-  }, 2000);
+  if (fetched.nextRoot == null) {
+    const root = syncData();
+    console.log('synced root: ', root);
+    await pullTangleData(root);
+  } else {
+    setTimeout(() => {
+      pullTangleData(nextRoot);
+    }, 2000);
+  }
 }
 
 async function initView() {
   const syncedRoot = await syncData();
   if (syncedRoot) {
-    pullTangleData(syncedRoot);
+    await pullTangleData(syncedRoot);
     return true;
   } else {
     console.error('Didn\'t find any rout');
@@ -73,7 +76,7 @@ async function syncData() {
   console.log('sync data');
   const urlPrefix = process.env.NODE_ENV === 'production' ? 'https://heart-rate-backend.netlify.com' : '';
 
-  let responsePromise = fetch(urlPrefix + '/.netlify/functions/server/currentroot');
+  let responsePromise = fetch(urlPrefix + '/.netlify/functions/server?currentRootParam=true');
   const response = await responsePromise;
   if (response.status === 200) {
     const json = await response.json();
