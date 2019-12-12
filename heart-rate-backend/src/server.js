@@ -34,10 +34,13 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
-router.get('/currentroot', (req, res) => {
-
+router.get('/currentroot', async (req, res) => {
   res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
-  res.write(JSON.stringify({ currentRoot }));
+  const root = await iotaPublisher.publish({
+    heartRate: -1,
+    timestamp: new Date().toISOString(),
+  });
+  res.write(JSON.stringify({ currentRoot: root }));
   res.end();
 
 });
