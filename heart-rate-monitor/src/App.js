@@ -46,22 +46,37 @@ const logData = encodedData => {
   }
 };
 
+let counter = 0;
+let prevRoot = null;
+
 async function pullTangleData(root) {
   let fetched = null;
   if (root) {
     fetched = await Mam.fetch(root, mode, secretKey, logData);
   }
   const nextRoot = fetched && fetched.nextRoot;
-
   console.log('Next Root: ', nextRoot);
-  if (nextRoot == null) {
+
+  if (nextRoot === prevRoot) {
+    counter++;
+  } else {
+    prevRoot = nextRoot;
+    counter = 0;
+  }
+  if (counter === 5) {
     const root = await syncData();
     console.log('synced root: ', root);
     await pullTangleData(root);
   } else {
-    setTimeout(async () => {
-      await pullTangleData(nextRoot);
-    }, 2000);
+    if (nextRoot == null) {
+      const root = await syncData();
+      console.log('synced root: ', root);
+      await pullTangleData(root);
+    } else {
+      setTimeout(async () => {
+        await pullTangleData(nextRoot);
+      }, 2000);
+    }
   }
 }
 
