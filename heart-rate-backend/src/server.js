@@ -27,8 +27,7 @@ router.get('/', async (req, res) => {
   } else if (currentRootParam) {
     res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
     const root = await iotaPublisher.publish({
-      heartRate: -1,
-      timestamp: new Date().toISOString(),
+      comment: 'connecting to new root',
     });
     console.log('sending new root to client: ', root);
     res.end(JSON.stringify({ currentRoot: root }));

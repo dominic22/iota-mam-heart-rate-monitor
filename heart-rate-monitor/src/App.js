@@ -8,9 +8,9 @@ import Mam from '@iota/mam';
 import moment from 'moment';
 import 'moment/locale/de';
 
-const mode = 'restricted';
-const secretKey = 'SECRETBIG'; // secret always upper case!
-const provider = 'https://nodes.devnet.iota.org';
+export const mode = 'restricted';
+export const secretKey = 'SECRETBIG'; // secret always upper case!
+export const provider = 'https://nodes.devnet.iota.org';
 Mam.init(provider);
 
 export default function App() {
@@ -42,7 +42,7 @@ const logData = encodedData => {
 
   const date = moment(data.timestamp).format('MM.DD.YYYY');
   if (data.heartRate != null && data.heartRate >= 0) {
-    addData(dateString, data.heartRate, date);
+    addData(dateString, data.heartRate, date, prevRoot);
   }
 };
 
@@ -63,7 +63,7 @@ async function pullTangleData(root) {
     prevRoot = nextRoot;
     counter = 0;
   }
-  if (counter === 5) {
+  if (counter === 2) {
     const root = await syncData();
     console.log('synced root: ', root);
     await pullTangleData(root);

@@ -27,7 +27,6 @@
   position: absolute;
   background: rgba(0, 0, 0, .7);
   color: white;
-  font-size: 26px;
   border-radius: 3px;
   -webkit-transition: all .1s ease;
   transition: all .1s ease;
@@ -45,8 +44,29 @@
   margin-right: 10px;
   font-size: 16px;
 }
+.chartjs-tooltip-root {
+  max-width: 140px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
 
-#chartjs-tooltip th,
-#chartjs-tooltip td {
+
+#chartjs-tooltip .label {
+  font-weight: bold;
+}
+#chartjs-tooltip * {
   font-size: 16px;
+  text-align: center;
+  width: auto;
+  line-height: 18px;
+  margin-bottom: 4px;
+  padding-bottom: 4px;
+}
+
+#chartjs-tooltip a {
+  pointer-events: auto;
+  color: #09d3ac;
 }

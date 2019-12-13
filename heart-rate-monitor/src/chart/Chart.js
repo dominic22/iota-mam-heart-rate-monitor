@@ -2,7 +2,11 @@ import React, { useEffect } from 'react';
 import './Chart.css'
 import Chart from 'chart.js';
 
+export const mode = 'restricted';
+export const secretKey = 'SECRETBIG'; // secret always upper case!
+export const provider = 'https://nodes.devnet.iota.org';
 var chart;
+const mamExplorerLink = `https://mam-explorer.firebaseapp.com/?provider=${encodeURIComponent(provider)}&mode=${mode}&key=${secretKey.padEnd(81, '9')}&root=`;
 
 const customTooltips = function (tooltip) {
   // Tooltip Element
@@ -11,7 +15,7 @@ const customTooltips = function (tooltip) {
   if (!tooltipEl) {
     tooltipEl = document.createElement('div');
     tooltipEl.id = 'chartjs-tooltip';
-    tooltipEl.innerHTML = '<table></table>';
+    tooltipEl.innerHTML = '<div class="tooltip-wrapper"></div>';
     this._chart.canvas.parentNode.appendChild(tooltipEl);
   }
 
@@ -33,31 +37,31 @@ const customTooltips = function (tooltip) {
     return bodyItem.lines;
   }
 
+  console.log('Tooltip 1', tooltip);
+  console.log('Tooltip 1', chart.data.datasets);
   // Set Text
   if (tooltip.body) {
     var titleLines = tooltip.title || [];
     var bodyLines = tooltip.body.map(getBody);
 
-    let innerHtml = '<thead>';
-
-    titleLines.forEach(function (title) {
-      innerHtml += '<tr><th>' + title + '</th></tr>';
-    });
-    innerHtml += '</thead><tbody>';
+    let innerHtml = '';
+    //
+    // titleLines.forEach(function (title) {
+    //   innerHtml += '<tr><th>' + title + '</th></tr>';
+    // });
+    // innerHtml += '</thead><tbody>';
+    innerHtml += '<div class="label">'  + titleLines[0] +'</div>'
 
     bodyLines.forEach(function (body, i) {
-      const colors = tooltip.labelColors[i];
-      let style = 'background:' + colors.backgroundColor;
-      style += '; border-color:' + colors.borderColor;
-      style += '; border-width: 2px';
-      style += '; font-size: 26px';
-      const span = '<span class="chartjs-tooltip-key" style="' + style + '"></span>';
-      innerHtml += '<tr><td>' + span + body + '</td></tr>';
+      const span = '<div class="chartjs-tooltip-key">' + body +'</div>';
+      innerHtml += span;
+      const index = chart.data.datasets[0].root && chart.data.datasets[0].root.length - 1;
+      const href = mamExplorerLink + chart.data.datasets[0].root[index];
+      innerHtml += '<div class="chartjs-tooltip-root"><a href="' + href + '" target="_blank">open explorer</a></div>'
     });
-    innerHtml += '</tbody>';
 
-    var tableRoot = tooltipEl.querySelector('table');
-    tableRoot.innerHTML = innerHtml;
+    var tooltipWrapper = tooltipEl.querySelector('div.tooltip-wrapper');
+    tooltipWrapper.innerHTML = innerHtml;
   }
 
   var positionY = this._chart.canvas.offsetTop;
@@ -82,6 +86,7 @@ export function initializeChart(data, labels) {
       datasets: [{
         label: 'Heart Rate',
         data,
+        root: [],
         borderColor: [
           'rgba(223, 71, 50, 1)'
         ],
@@ -130,17 +135,18 @@ export function initializeChart(data, labels) {
   });
 }
 
-export function addData(label, data, title) {
+export function addData(label, data, title, nextRoot) {
   console.log('ADD DATA ', label, data)
   if (!chart) {
     return;
   }
-  if(title) {
+  if (title) {
     chart.options.title.text = title;
   }
   chart.data.labels.push(label);
   chart.data.datasets.forEach((dataset) => {
     dataset.data.push(data);
+    dataset.root.push(nextRoot);
   });
   chart.update();
 }
