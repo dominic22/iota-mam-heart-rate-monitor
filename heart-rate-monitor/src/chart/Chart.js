@@ -37,19 +37,13 @@ const customTooltips = function (tooltip) {
     return bodyItem.lines;
   }
 
-  console.log('Tooltip 1', tooltip);
-  console.log('Tooltip 1', chart.data.datasets);
   // Set Text
   if (tooltip.body) {
     var titleLines = tooltip.title || [];
     var bodyLines = tooltip.body.map(getBody);
 
     let innerHtml = '';
-    //
-    // titleLines.forEach(function (title) {
-    //   innerHtml += '<tr><th>' + title + '</th></tr>';
-    // });
-    // innerHtml += '</thead><tbody>';
+
     innerHtml += '<div class="label">'  + titleLines[0] +'</div>'
 
     bodyLines.forEach(function (body, i) {
