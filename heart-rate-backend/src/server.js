@@ -30,8 +30,8 @@ router.get('/', async (req, res) => {
       heartRate: -1,
       timestamp: new Date().toISOString(),
     });
-    res.write(JSON.stringify({ currentRoot: root }));
-    res.end();
+    console.log('sending new root to client: ', root);
+    res.end(JSON.stringify({ currentRoot: root }));
   } else {
     console.log('no heart rate parameter provided');
     res.writeHead(200, { 'Content-Type': 'text/html', 'Access-Control-Allow-Origin': '*' });

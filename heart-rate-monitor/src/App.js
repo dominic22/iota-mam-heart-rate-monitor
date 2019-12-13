@@ -59,8 +59,8 @@ async function pullTangleData(root) {
     console.log('synced root: ', root);
     await pullTangleData(root);
   } else {
-    setTimeout(() => {
-      pullTangleData(nextRoot);
+    setTimeout(async () => {
+      await pullTangleData(nextRoot);
     }, 2000);
   }
 }
@@ -82,10 +82,15 @@ async function syncData() {
 
   let responsePromise = fetch(urlPrefix + '/.netlify/functions/server?currentRootParam=true');
   const response = await responsePromise;
+  console.log('response', response);
   if (response.status === 200) {
-    const json = await response.json();
-    console.log('current root', json.currentRoot);
-    return json.currentRoot;
+    try {
+      const json = await response.json();
+      console.log('current root', json.currentRoot);
+      return json.currentRoot;
+    } catch (e) {
+      console.log('Error: ', e);
+    }
   } else {
     console.log('fetched failed');
     return null;
@@ -124,8 +129,8 @@ async function pullTangleDataStatic(root) {
   const fetched = await Mam.fetch(root, mode, secretKey, logData);
   const nextRoot = fetched.nextRoot;
   console.log('Next Root: ', nextRoot);
-  setTimeout(() => {
-    pullTangleDataStatic(nextRoot);
+  setTimeout(async () => {
+    await pullTangleDataStatic(nextRoot);
   }, 500);
 }
 
